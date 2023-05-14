@@ -1,0 +1,26 @@
+#include <cs50.h>
+#include <stdio.h>
+int main(void)
+{
+    int h = 0;
+    int linecount = 1;
+  //check if height is between 1-8 inclusive
+    while (h < 1 || h > 8)
+    {
+      h = get_int("Height:");
+    }
+    //loops for proper height and number of #s
+    for (int i = h; i > 0; i--)
+    {
+      for (int j = i; j > 1; j--)
+      {
+            printf(" ");
+      }
+      for (int k = linecount; k > 0; k--)
+      {
+        printf("#");
+      }
+      linecount++;
+      printf("\n");
+    }
+}
