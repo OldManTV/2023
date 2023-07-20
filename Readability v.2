@@ -1,0 +1,89 @@
+#include <cs50.h>
+#include <stdio.h>
+#include <ctype.h>
+#include <string.h>
+#include<math.h>
+int count_letters(string text);
+int count_words(string text);
+int count_sentences(string text);
+int main(void)
+{
+    //Gets user input for text sample
+    string text = get_string("Text: ");
+    //Counts the number of letters in the text sample
+    float letters = count_letters(text);
+    //Counts the number of words in the text sample
+    float words = count_words(text);
+    //Counts the number of sentences in the text sample
+    float sentences = count_sentences(text);
+    //Calulates the Coleman-Liau Index, rounds the number and displays the reading level the text, showing when it's below grade 1 or above grade 16 in those cases
+    float index = round(0.0588 * ((letters / words) * 100) - 0.296 * ((sentences / words) * 100) - 15.8);
+    int intex = index;
+    if (intex <= 1)
+    {
+        printf("Before Grade 1\n");
+    }
+    if (intex > 1 && intex < 16)
+    {
+        printf("Grade %i\n", intex);
+    }
+    if (intex >= 16)
+    {
+        printf("Grade 16+\n");
+    }
+}
+int count_letters(string text)
+{
+    int letters = 0;
+    for (int i = 0; i < strlen(text); i++)
+    {
+        if (isalpha(text[i]))
+        {
+            letters++;
+        }
+    }
+    return letters;
+}
+int count_words(string text)
+{
+    int spacechecker = 1;
+    int words = 0;
+    for (int i = 0; i < strlen(text); i++)
+    {
+        //Checks if a space has occurred then sets this value to 1, value starts at 1 in case first character of text is a letter so it is counted as a word too (despite no prior space)
+        if (text[i] == 32)
+        {
+            spacechecker = 1;
+        }
+        //Once a space has occurred, it checks every character to see if it is a letter, and increments the word counter on the first letter of a new word, then resets the spacechecker
+        if (spacechecker == 1)
+        {
+            if (isalpha(text[i]))
+            {
+                words++;
+                spacechecker = 0;
+            }
+        }
+    }
+    return words;
+}
+int count_sentences(string text)
+{
+    int letterchecker = 0;
+    int sentences = 0;
+    for (int i = 0; i < strlen(text); i++)
+    {
+        //Checks if letters have occurred then sets this value to 1, a sentence is only counted if there is letters before the sentence ending punctuation, to discount cases like "..."
+        if (isalpha(text[i]))
+        {
+            letterchecker = 1;
+        }
+        //Checks
+        if (letterchecker == 1 && (text[i] == 33 || text[i] == 46 || text[i] == 63))
+        {
+            sentences++;
+            letterchecker = 0;
+        }
+    }
+    return sentences;
+}
