@@ -1,0 +1,71 @@
+#include <cs50.h>
+#include <ctype.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+int argchecker(int argc, string argv[]);
+string encipherer(string argv[]);
+int main(int argc, string argv[])
+{
+    // Checks that the program arguments are valid, i.e. a single 26 digit, alphabetic, command line argument
+    int argchecked = argchecker(argc, argv);
+    if (argchecked == 0)
+    {
+        // Gets input for plaintext and enciphers it with the command line argument then returns this enciphered text to be shown
+        string ciphertext = encipherer(argv);
+        printf("ciphertext: %s\n", ciphertext);
+    }
+}
+int argchecker(int argc, string argv[])
+{
+    // Checks that there is a single command line argument
+    if (argc != 2)
+    {
+        printf("Usage: ./substitution KEY\n");
+        exit(1);
+    }
+    // Checks that the single command line argument is 26 characters long
+    if (strlen(argv[1]) != 26)
+    {
+        printf("Key must contain 26 characters\n");
+        exit(1);
+    }
+    // Checks that all the characters in the command line argument are letters
+    for (int x = 0; x < strlen(argv[1]); x++)
+    {
+        if (isalpha(argv[1][x]) == 0)
+        {
+            printf("Key must only contain alphabetic characters\n");
+            exit(1);
+        }
+    }
+    // Checks that there are no duplicate letters in the command line argument
+    for (int i = 0; i < 26; i++)
+    {
+        for (int d = i + 1; d < 26; d++)
+        {
+            if (toupper(argv[1][i]) == toupper(argv[1][d]))
+            {
+                printf("Kay must not contain repeated characters\n");
+                exit(1);
+            }
+        }
+    }
+    return 0;
+}
+string encipherer(string argv[])
+{
+    string plaintext = get_string("plaintext: ");
+    for (int i = 0; i < strlen(plaintext); i++)
+    {
+        if (isupper(plaintext[i]))
+        {
+            plaintext[i] = toupper(argv[1][plaintext[i] - 65]);
+        }
+        if (islower(plaintext[i]))
+        {
+            plaintext[i] = tolower(argv[1][plaintext[i] - 97]);
+        }
+    }
+    return plaintext;
+}
